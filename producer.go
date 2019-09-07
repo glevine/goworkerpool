@@ -24,9 +24,10 @@ func (p *producer) Start(ctx context.Context) {
 		case <- ctx.Done():
 			fmt.Println("producer: graceful shutdown")
 			return
-		default:
-			p.queue.Send() <- 2
+		case p.queue.Send() <- 2:
 			time.Sleep(time.Second)
+		default:
+			fmt.Println("producer: unable to send work")
 		}
 	}
 }
