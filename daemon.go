@@ -17,6 +17,8 @@ func NewDaemon() *daemon {
 
 func (d *daemon) Start(ctx context.Context, producer *producer, pool *workerPool) {
 	fmt.Println("daemon: starting")
+	defer fmt.Println("daemon: shutdown")
+
 	d.producer = producer
 	d.pool = pool
 

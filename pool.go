@@ -20,6 +20,7 @@ func NewWorkerPool(size int, q *queue) *workerPool {
 
 func (wp *workerPool) StartWorkers(ctx context.Context) {
 	fmt.Println("worker pool: starting")
+	defer fmt.Println("worker pool: shutdown")
 
 	var wg sync.WaitGroup
 
@@ -32,6 +33,4 @@ func (wp *workerPool) StartWorkers(ctx context.Context) {
 	}
 
 	wg.Wait()
-
-	fmt.Println("worker pool: graceful shutdown")
 }

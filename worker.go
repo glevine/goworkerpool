@@ -17,11 +17,11 @@ func NewWorker(q *queue) *worker {
 
 func (w *worker) Start(ctx context.Context) {
 	fmt.Println("worker: starting")
+	defer fmt.Println("worker: shutdown")
 
 	for {
 		select {
 		case <- ctx.Done():
-			fmt.Println("worker: graceful shutdown")
 			return
 		case i := <-w.queue.Receive():
 			fmt.Println("worker: ", i)

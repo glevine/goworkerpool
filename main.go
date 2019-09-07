@@ -13,10 +13,10 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	var wg sync.WaitGroup
 	defer func() {
-		fmt.Println("main: shutting down")
+		fmt.Println("main: terminating")
 		cancel()
 		wg.Wait()
-		fmt.Println("main: graceful shutdown")
+		fmt.Println("main: shutdown")
 	}()
 
 	wg.Add(1)

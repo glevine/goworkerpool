@@ -18,11 +18,11 @@ func NewProducer(q *queue) *producer {
 
 func (p *producer) Start(ctx context.Context) {
 	fmt.Println("producer: starting")
+	defer fmt.Println("producer: shutdown")
 
 	for {
 		select {
 		case <- ctx.Done():
-			fmt.Println("producer: graceful shutdown")
 			return
 		case p.queue.Send() <- 2:
 			time.Sleep(time.Second)
