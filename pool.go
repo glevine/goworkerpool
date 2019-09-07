@@ -25,7 +25,10 @@ func (wp *workerPool) StartWorkers(ctx context.Context) {
 
 	for i := 0; i < wp.size; i++ {
 		wg.Add(1)
-		go NewWorker(wp.queue).Start(ctx, &wg)
+		go func() {
+			defer wg.Done()
+			NewWorker(wp.queue).Start(ctx)
+		}()
 	}
 
 	wg.Wait()

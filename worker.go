@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"sync"
 )
 
 type worker struct {
@@ -16,9 +15,8 @@ func NewWorker(q *queue) *worker {
 	}
 }
 
-func (w *worker) Start(ctx context.Context, wg *sync.WaitGroup) {
+func (w *worker) Start(ctx context.Context) {
 	fmt.Println("worker: starting")
-	defer wg.Done()
 
 	for {
 		select {
