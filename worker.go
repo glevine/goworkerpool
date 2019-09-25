@@ -19,7 +19,7 @@ func (w *worker) start() {
 	fmt.Println("worker: starting")
 	defer fmt.Println("worker: shutdown")
 
-	for i := range w.queue.Receive() {
+	for i := range w.queue.receive() {
 		time.Sleep(time.Second)
 		fmt.Println("worker: ", i)
 	}

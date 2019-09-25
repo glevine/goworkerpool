@@ -26,18 +26,18 @@ func (d *daemon) Start(producer *producer, pool *workerPool) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		d.pool.StartWorkers()
+		d.pool.start()
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		d.producer.Start()
+		d.producer.start()
 	}()
 
 	wg.Wait()
 }
 
 func (d *daemon) Stop() {
-	d.producer.Stop()
+	d.producer.stop()
 }

@@ -17,7 +17,7 @@ func NewWorkerPool(size int, q *queue) *workerPool {
 	}
 }
 
-func (wp *workerPool) StartWorkers() {
+func (wp *workerPool) start() {
 	fmt.Println("worker pool: starting")
 	defer fmt.Println("worker pool: shutdown")
 

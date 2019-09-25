@@ -10,14 +10,14 @@ func NewQueue() *queue {
 	}
 }
 
-func (q *queue) Send() chan<- int {
+func (q *queue) send() chan<- int {
 	return q.work
 }
 
-func (q *queue) Receive() <-chan int {
+func (q *queue) receive() <-chan int {
 	return q.work
 }
 
-func (q *queue) Close() {
+func (q *queue) close() {
 	close(q.work)
 }

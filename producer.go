@@ -6,34 +6,29 @@ import (
 
 type producer struct {
 	queue *queue
-	quit  chan struct{}
+	quit  bool
 }
 
 func NewProducer(q *queue) *producer {
 	return &producer{
 		queue: q,
-		quit:  make(chan struct{}, 1),
+		quit:  false,
 	}
 }
 
-func (p *producer) Start() {
+func (p *producer) start() {
 	fmt.Println("producer: starting")
-	defer p.queue.Close()
+	defer p.queue.close()
 	defer fmt.Println("producer: shutdown")
 
 	counter := 0
-	for {
-		select {
-		case <-p.quit:
-			return
-		default:
-			counter++
-			fmt.Println("producer: ", counter)
-			p.queue.Send() <- counter
-		}
+	for !p.quit {
+		counter++
+		fmt.Println("producer: ", counter)
+		p.queue.send() <- counter
 	}
 }
 
-func (p *producer) Stop() {
-	p.quit <- struct{}{}
+func (p *producer) stop() {
+	p.quit = true
 }
