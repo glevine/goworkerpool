@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"sync"
 )
@@ -15,7 +14,7 @@ func NewDaemon() *daemon {
 	return &daemon{}
 }
 
-func (d *daemon) Start(ctx context.Context, producer *producer, pool *workerPool) {
+func (d *daemon) Start(producer *producer, pool *workerPool) {
 	fmt.Println("daemon: starting")
 	defer fmt.Println("daemon: shutdown")
 
@@ -27,14 +26,18 @@ func (d *daemon) Start(ctx context.Context, producer *producer, pool *workerPool
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		d.pool.StartWorkers(ctx)
+		d.pool.StartWorkers()
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		d.producer.Start(ctx)
+		d.producer.Start()
 	}()
 
 	wg.Wait()
+}
+
+func (d *daemon) Stop() {
+	d.producer.Stop()
 }

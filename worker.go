@@ -1,30 +1,26 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"time"
 )
 
 type worker struct {
 	queue *queue
 }
 
-func NewWorker(q *queue) *worker {
+func newWorker(q *queue) *worker {
 	return &worker{
 		queue: q,
 	}
 }
 
-func (w *worker) Start(ctx context.Context) {
+func (w *worker) start() {
 	fmt.Println("worker: starting")
 	defer fmt.Println("worker: shutdown")
 
-	for {
-		select {
-		case <- ctx.Done():
-			return
-		case i := <-w.queue.Receive():
-			fmt.Println("worker: ", i)
-		}
+	for i := range w.queue.Receive() {
+		time.Sleep(time.Second)
+		fmt.Println("worker: ", i)
 	}
 }

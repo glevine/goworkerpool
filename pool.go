@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"sync"
 )
@@ -18,7 +17,7 @@ func NewWorkerPool(size int, q *queue) *workerPool {
 	}
 }
 
-func (wp *workerPool) StartWorkers(ctx context.Context) {
+func (wp *workerPool) StartWorkers() {
 	fmt.Println("worker pool: starting")
 	defer fmt.Println("worker pool: shutdown")
 
@@ -28,7 +27,7 @@ func (wp *workerPool) StartWorkers(ctx context.Context) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			NewWorker(wp.queue).Start(ctx)
+			newWorker(wp.queue).start()
 		}()
 	}
 

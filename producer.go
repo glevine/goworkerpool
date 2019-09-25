@@ -1,33 +1,39 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"time"
 )
 
 type producer struct {
 	queue *queue
+	quit  chan struct{}
 }
 
 func NewProducer(q *queue) *producer {
 	return &producer{
 		queue: q,
+		quit:  make(chan struct{}, 1),
 	}
 }
 
-func (p *producer) Start(ctx context.Context) {
+func (p *producer) Start() {
 	fmt.Println("producer: starting")
+	defer p.queue.Close()
 	defer fmt.Println("producer: shutdown")
 
+	counter := 0
 	for {
 		select {
-		case <- ctx.Done():
+		case <-p.quit:
 			return
-		case p.queue.Send() <- 2:
-			time.Sleep(time.Second)
 		default:
-			fmt.Println("producer: unable to send work")
+			counter++
+			fmt.Println("producer: ", counter)
+			p.queue.Send() <- counter
 		}
 	}
+}
+
+func (p *producer) Stop() {
+	p.quit <- struct{}{}
 }

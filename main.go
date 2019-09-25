@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"context"
 	"sync"
 	"time"
 )
@@ -10,11 +9,15 @@ import (
 func main() {
 	fmt.Println("main: starting")
 
-	ctx, cancel := context.WithCancel(context.Background())
+	d := NewDaemon()
+	q := NewQueue()
+	prod := NewProducer(q)
+	pool := NewWorkerPool(5, q)
+
 	var wg sync.WaitGroup
 	defer func() {
 		fmt.Println("main: terminating")
-		cancel()
+		d.Stop()
 		wg.Wait()
 		fmt.Println("main: shutdown")
 	}()
@@ -22,12 +25,8 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		d := NewDaemon()
-		q := NewQueue()
-		prod := NewProducer(q)
-		pool := NewWorkerPool(5, q)
-		d.Start(ctx, prod, pool)
+		d.Start(prod, pool)
 	}()
 
-	time.Sleep(time.Second * 15)
+	time.Sleep(time.Second * 3)
 }

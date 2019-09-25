@@ -17,3 +17,7 @@ func (q *queue) Send() chan<- int {
 func (q *queue) Receive() <-chan int {
 	return q.work
 }
+
+func (q *queue) Close() {
+	close(q.work)
+}
